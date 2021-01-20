@@ -41,4 +41,16 @@ class Market
 
     total_inventory
   end
+
+  def overstocked_items
+    total_inventory.map do |item, info|
+      item if overstocked?(info)
+    end.compact
+  end
+
+  private
+
+  def overstocked?(item_info)
+    item_info[:vendors].length > 1 && item_info[:quantity] > 50
+  end
 end

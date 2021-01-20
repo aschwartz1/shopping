@@ -54,4 +54,17 @@ class VendorTest < Minitest::Test
 
     assert_equal ['Peach', 'Tomato'], @vendor.item_names
   end
+
+  def test_can_sell
+    @vendor.stock(@tomato, 15)
+
+    @vendor.sell(@tomato, 10)
+
+    assert_equal 5, @vendor.check_stock(@tomato)
+  end
+
+  def test_cannot_sell_more_than_have
+    skip
+    # TODO: implement this guard
+  end
 end

@@ -64,4 +64,30 @@ class MarketTest < Minitest::Test
     expected = ['Jalepeno', 'Peach Jelly', 'Tomato']
     assert_equal expected, @market.sorted_item_list
   end
+
+  def test_total_inventory
+    @garden_seller.stock(@jalepeno, 10)
+    @garden_seller.stock(@tomato, 20)
+    @sample_seller.stock(@jalepeno, 5)
+    @sample_seller.stock(@peach_jelly, 5)
+    @market.add_vendor(@garden_seller)
+    @market.add_vendor(@sample_seller)
+
+    expected = {
+      @jalepeno => {
+        quantity: 15,
+        vendors: [@garden_seller, @sample_seller]
+      },
+      @tomato => {
+        quantity: 20,
+        vendors: [@garden_seller]
+      },
+      @peach_jelly => {
+        quantity: 5,
+        vendors: [@sample_seller]
+      }
+    }
+
+    assert_equal expected, @market.total_inventory
+  end
 end

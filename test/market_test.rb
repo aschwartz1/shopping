@@ -1,5 +1,6 @@
 require 'minitest/autorun'
 require 'minitest/pride'
+require 'mocha/minitest'
 require './lib/market'
 require './lib/vendor'
 require './lib/item'
@@ -15,6 +16,10 @@ class MarketTest < Minitest::Test
     @jalepeno = Item.new({name: 'Jalepeno', price: '$0.25'})
     @peach_jelly = Item.new({name: 'Peach Jelly', price: '$1.00'})
     @pepper_jelly = Item.new({name: 'Pepper Jelly', price: '$1.25'})
+
+    @market.stubs(:date).returns('31/01/2021')
+    # TODO: Why doesn't the below work? I thought the stub would override my Market#today_as_string ?
+    # @market.stubs(:today_as_string).returns('31/01/2021')
   end
 
   def test_it_exists
@@ -24,6 +29,7 @@ class MarketTest < Minitest::Test
   def test_readable_attributes
     assert_equal 'Farmers Market', @market.name
     assert_equal [], @market.vendors
+    assert_equal '31/01/2021', @market.date
   end
 
   def test_can_add_vendors
@@ -103,5 +109,31 @@ class MarketTest < Minitest::Test
     @market.add_vendor(@jelly_seller)
 
     assert_equal [@jalepeno], @market.overstocked_items
+  end
+
+  def test_vendor_can_sell
+    @garden_seller.stock(@jalepeno, 40)
+
+    assert_equal 40, @market.vendor_can_sell(45, @garden_seller, @jalepeno)
+    assert_equal 20, @market.vendor_can_sell(20, @garden_seller, @jalepeno)
+  end
+
+  def test_sell
+    @garden_seller.stock(@jalepeno, 40)
+    @garden_seller.stock(@tomato, 20)
+    @sample_seller.stock(@jalepeno, 15)
+    @sample_seller.stock(@tomato, 5)
+    @jelly_seller.stock(@peach_jelly, 50)
+    @jelly_seller.stock(@pepper_jelly, 60)
+    @market.add_vendor(@garden_seller)
+    @market.add_vendor(@sample_seller)
+    @market.add_vendor(@jelly_seller)
+
+    assert_equal false, @market.sell(@tomato, 100)
+    assert_equal false, @market.sell(@pepper_jelly, 61)
+
+    assert_equal true, @market.sell(@jalepeno, 50)
+    assert_equal 0, @garden_seller.check_stock(@jalepeno)
+    assert_equal 5, @sample_seller.check_stock(@jalepeno)
   end
 end

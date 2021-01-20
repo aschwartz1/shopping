@@ -132,6 +132,7 @@ class MarketTest < Minitest::Test
     assert_equal false, @market.sell(@tomato, 100)
     assert_equal false, @market.sell(@pepper_jelly, 61)
 
+    # TODO: Not sure how best to test the result?
     assert_equal true, @market.sell(@jalepeno, 50)
     assert_equal 0, @garden_seller.check_stock(@jalepeno)
     assert_equal 5, @sample_seller.check_stock(@jalepeno)

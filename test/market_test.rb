@@ -40,4 +40,16 @@ class MarketTest < Minitest::Test
 
     assert_equal ['Fruits and Veggies', 'The Preservation Room'], @market.vendor_names
   end
+
+  def test_can_find_vendors_that_sell_an_item
+    @garden_seller.stock(@jalepeno, 10)
+    @garden_seller.stock(@tomato, 20)
+    @sample_seller.stock(@jalepeno, 5)
+    @market.add_vendor(@garden_seller)
+    @market.add_vendor(@sample_seller)
+
+    assert_equal [@garden_seller, @sample_seller], @market.vendors_that_sell('Jalepeno')
+    assert_equal [@garden_seller], @market.vendors_that_sell('Tomato')
+    assert_equal [], @market.vendors_that_sell('Chard')
+  end
 end

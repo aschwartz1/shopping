@@ -22,8 +22,20 @@ class Vendor
   end
 
   def sells?(item_name)
-    @inventory.keys.any? do |item|
+    items.any? do |item|
       item.name == item_name
     end
+  end
+
+  def item_names
+    items.map do |item|
+      item.name
+    end.sort
+  end
+
+  private
+
+  def items
+    @inventory.keys
   end
 end

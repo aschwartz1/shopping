@@ -19,4 +19,9 @@ class MarketTest < Minitest::Test
   def test_it_exists
     assert_instance_of Market, @farmers_market
   end
+
+  def test_readable_attributes
+    assert_equal 'Farmers Market', @farmers_market.name
+    assert_equal [], @farmers_market.vendors
+  end
 end

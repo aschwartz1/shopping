@@ -40,4 +40,11 @@ class VendorTest < Minitest::Test
 
     assert_equal 30, @vendor.potential_revenue
   end
+
+  def test_can_tell_if_it_sells_something
+    @vendor.stock(@peach, 30)
+
+    assert_equal true, @vendor.sells?('Peach')
+    assert_equal false, @vendor.sells?('Chard')
+  end
 end

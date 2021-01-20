@@ -20,4 +20,10 @@ class Vendor
       item.price * quantity
     end
   end
+
+  def sells?(item_name)
+    @inventory.keys.any? do |item|
+      item.name == item_name
+    end
+  end
 end
